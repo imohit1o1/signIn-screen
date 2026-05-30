@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { theme } from "../../../theme";
@@ -9,7 +8,6 @@ import { Text } from "../../ui/Text";
 type ResetMethod = "email" | "2fa" | "authenticator";
 
 export function ForgotPasswordOptions() {
-  const router = useRouter();
   const [selectedMethod, setSelectedMethod] = useState<ResetMethod>("2fa"); // Default highlighted method from mockup
   const [loading, setLoading] = useState(false);
 
@@ -31,23 +29,6 @@ export function ForgotPasswordOptions() {
 
   return (
     <View style={styles.container}>
-      {/* Top Header Back Navigation Chevron */}
-      <View style={styles.navHeader}>
-        <Card.Action
-          variant="outline"
-          iconOnly
-          size="md"
-          onPress={() => router.back()}
-          style={styles.backButton}
-        >
-          <Ionicons
-            name="chevron-back-outline"
-            size={20}
-            color={theme.colors.text}
-          />
-        </Card.Action>
-      </View>
-
       {/* Screen Title & Description */}
       <View style={styles.header}>
         <Text variant="h1" align="center" style={styles.title}>
@@ -162,15 +143,6 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 400,
     alignSelf: "center",
-  },
-  navHeader: {
-    width: "100%",
-    paddingTop: theme.spacing.md,
-    alignItems: "flex-start",
-  },
-  backButton: {
-    backgroundColor: theme.colors.card,
-    borderColor: theme.colors.border,
   },
   header: {
     alignItems: "center",

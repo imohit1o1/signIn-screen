@@ -25,7 +25,7 @@ interface InputProps extends TextInputProps {
   rightIcon?: React.ReactNode;
   containerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<TextStyle>;
-  children?: React.ReactNode; // supports compound usage: <Input><Input.Field /></Input>
+  children?: React.ReactNode;
 }
 
 interface InputFieldProps extends TextInputProps {
@@ -33,7 +33,7 @@ interface InputFieldProps extends TextInputProps {
 }
 
 // -------------------------------------------------------------------
-// Helper: apply / restore border styles directly on the native layer
+// Helpers: manipulate native border without React state
 // -------------------------------------------------------------------
 function applyFocusStyle(ref: React.RefObject<View | null> | null) {
   ref?.current?.setNativeProps({
@@ -64,7 +64,7 @@ function applyBlurStyle(
 }
 
 // -------------------------------------------------------------------
-// Input.Field  ─  raw TextInput that reads the wrapper ref from context
+// Input.Field — bare TextInput that reads the wrapper ref from context
 // -------------------------------------------------------------------
 function InputField({ style, onFocus, onBlur, ...props }: InputFieldProps) {
   const wrapperRef = useContext(InputWrapperRefContext);
@@ -92,9 +92,9 @@ function InputField({ style, onFocus, onBlur, ...props }: InputFieldProps) {
 }
 
 // -------------------------------------------------------------------
-// Input  ─  wrapper with icon slots + optional compound children
+// Input — wrapper with icon slots + optional compound children
 // -------------------------------------------------------------------
-export function Input({
+function InputBase({
   error,
   leftIcon,
   rightIcon,
@@ -157,8 +157,9 @@ export function Input({
   );
 }
 
-// Attach compound sub-component
-Input.Field = InputField;
+// Attach Field as a sibling export via Object.assign — TypeScript-safe
+// and guaranteed to survive React Compiler / Metro bundling.
+export const Input = Object.assign(InputBase, { Field: InputField });
 
 // -------------------------------------------------------------------
 // Styles
