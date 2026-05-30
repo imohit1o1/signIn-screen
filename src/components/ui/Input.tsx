@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { useRef, useContext, createContext } from "react";
 import {
   View,
   TextInput,
@@ -10,79 +10,72 @@ import {
 } from "react-native";
 import { theme } from "../../theme";
 
-// 1. Create a local context to share focus and error states between parent and field
-interface InputContextProps {
-  isFocused: boolean;
-  setIsFocused: (focused: boolean) => void;
-  error?: boolean;
-}
+// -------------------------------------------------------------------
+// Context: lets Input.Field reach up and animate the wrapper border
+// without any useState / re-renders.
+// -------------------------------------------------------------------
+const InputWrapperRefContext = createContext<React.RefObject<View | null> | null>(null);
 
-const InputContext = createContext<InputContextProps>({
-  isFocused: false,
-  setIsFocused: () => {},
-});
-
-interface InputProps {
-  children: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
+// -------------------------------------------------------------------
+// Props
+// -------------------------------------------------------------------
+interface InputProps extends TextInputProps {
   error?: boolean | string;
-}
-
-// 2. Outer Capsule Container
-export function Input({ children, style, error = false }: InputProps) {
-  const [isFocused, setIsFocused] = useState(false);
-
-  // Determine border styles dynamically based on focus and error context states
-  let borderStyle: ViewStyle = {
-    borderColor: theme.colors.border,
-  };
-
-  if (isFocused) {
-    borderStyle = {
-      borderColor: theme.colors.borderActive,
-      // Focus outline glow shadow
-      shadowColor: theme.colors.primary,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 6,
-      elevation: 2,
-    };
-  } else if (error) {
-    borderStyle = {
-      borderColor: theme.colors.error,
-      backgroundColor: theme.colors.errorBg,
-    };
-  }
-
-  return (
-    <InputContext.Provider value={{ isFocused, setIsFocused, error: !!error }}>
-      <View style={[styles.inputWrapper, borderStyle, style]}>
-        {children}
-      </View>
-    </InputContext.Provider>
-  );
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  containerStyle?: StyleProp<ViewStyle>;
+  style?: StyleProp<TextStyle>;
+  children?: React.ReactNode; // supports compound usage: <Input><Input.Field /></Input>
 }
 
 interface InputFieldProps extends TextInputProps {
   style?: StyleProp<TextStyle>;
 }
 
-// 3. Inner TextInput Component
-export function InputField({
-  onFocus,
-  onBlur,
-  style,
-  ...props
-}: InputFieldProps) {
-  const { setIsFocused } = useContext(InputContext);
+// -------------------------------------------------------------------
+// Helper: apply / restore border styles directly on the native layer
+// -------------------------------------------------------------------
+function applyFocusStyle(ref: React.RefObject<View | null> | null) {
+  ref?.current?.setNativeProps({
+    style: {
+      borderColor: theme.colors.borderActive,
+      shadowColor: theme.colors.primary,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.12,
+      shadowRadius: 6,
+      elevation: 2,
+      backgroundColor: theme.colors.card,
+    },
+  });
+}
+
+function applyBlurStyle(
+  ref: React.RefObject<View | null> | null,
+  hasError: boolean
+) {
+  ref?.current?.setNativeProps({
+    style: {
+      borderColor: hasError ? theme.colors.error : theme.colors.border,
+      shadowOpacity: 0,
+      elevation: 0,
+      backgroundColor: hasError ? theme.colors.errorBg : theme.colors.card,
+    },
+  });
+}
+
+// -------------------------------------------------------------------
+// Input.Field  ─  raw TextInput that reads the wrapper ref from context
+// -------------------------------------------------------------------
+function InputField({ style, onFocus, onBlur, ...props }: InputFieldProps) {
+  const wrapperRef = useContext(InputWrapperRefContext);
 
   const handleFocus = (e: any) => {
-    setIsFocused(true);
+    applyFocusStyle(wrapperRef);
     if (onFocus) onFocus(e);
   };
 
   const handleBlur = (e: any) => {
-    setIsFocused(false);
+    applyBlurStyle(wrapperRef, false);
     if (onBlur) onBlur(e);
   };
 
@@ -98,19 +91,89 @@ export function InputField({
   );
 }
 
-// 4. Attach Field sub-component to the Root Input container
+// -------------------------------------------------------------------
+// Input  ─  wrapper with icon slots + optional compound children
+// -------------------------------------------------------------------
+export function Input({
+  error,
+  leftIcon,
+  rightIcon,
+  containerStyle,
+  style,
+  onFocus,
+  onBlur,
+  children,
+  ...props
+}: InputProps) {
+  const wrapperRef = useRef<View>(null);
+
+  const handleFocus = (e: any) => {
+    applyFocusStyle(wrapperRef);
+    if (onFocus) onFocus(e);
+  };
+
+  const handleBlur = (e: any) => {
+    applyBlurStyle(wrapperRef, !!error);
+    if (onBlur) onBlur(e);
+  };
+
+  const errorStyle: ViewStyle = error
+    ? { borderColor: theme.colors.error, backgroundColor: theme.colors.errorBg }
+    : {};
+
+  // Compound usage: <Input error={...}><Icon /><Input.Field ... /></Input>
+  if (children) {
+    return (
+      <InputWrapperRefContext.Provider value={wrapperRef}>
+        <View
+          ref={wrapperRef}
+          style={[styles.inputWrapper, errorStyle, containerStyle]}
+        >
+          {children}
+        </View>
+      </InputWrapperRefContext.Provider>
+    );
+  }
+
+  // Standalone usage: <Input leftIcon={...} rightIcon={...} value={...} />
+  return (
+    <View
+      ref={wrapperRef}
+      style={[styles.inputWrapper, errorStyle, containerStyle]}
+    >
+      {leftIcon && <View style={styles.iconContainer}>{leftIcon}</View>}
+
+      <TextInput
+        style={[styles.input, style]}
+        placeholderTextColor={theme.colors.textLight}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        autoCapitalize="none"
+        {...props}
+      />
+
+      {rightIcon && <View style={styles.iconContainer}>{rightIcon}</View>}
+    </View>
+  );
+}
+
+// Attach compound sub-component
 Input.Field = InputField;
 
+// -------------------------------------------------------------------
+// Styles
+// -------------------------------------------------------------------
 const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: theme.colors.card,
     borderWidth: 1.5,
-    borderRadius: theme.radius.xxl, // Pill shape capsule
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.xxl,
     height: 56,
     paddingHorizontal: theme.spacing.lg,
-    gap: theme.spacing.sm, // Automatic horizontal spacing for left/right icons
+    gap: theme.spacing.sm,
     width: "100%",
   },
   input: {
@@ -119,6 +182,10 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.sizes.md,
     color: theme.colors.text,
     fontWeight: theme.typography.weights.medium,
-    padding: 0, // Reset default OS text paddings
+    padding: 0,
+  },
+  iconContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

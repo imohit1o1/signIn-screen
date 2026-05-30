@@ -1,12 +1,12 @@
 import React from "react";
 import {
-  StyleSheet,
-  View,
-  ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   StatusBar,
   StyleProp,
+  StyleSheet,
+  View,
   ViewStyle,
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -19,7 +19,6 @@ interface ScreenProps {
   scrollable?: boolean;
   statusBarStyle?: "dark-content" | "light-content" | "default";
   statusBarBg?: string;
-  keyboardOffset?: number;
 }
 
 export function Screen({
@@ -29,7 +28,6 @@ export function Screen({
   scrollable = false,
   statusBarStyle = "dark-content",
   statusBarBg = theme.colors.background,
-  keyboardOffset = Platform.OS === "ios" ? 0 : 0,
 }: ScreenProps) {
   const insets = useSafeAreaInsets();
 
@@ -44,33 +42,57 @@ export function Screen({
     contentContainerStyle,
   ];
 
-  const renderContent = () => {
-    if (scrollable) {
-      return (
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={contentStyle}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          bounces={true}
-        >
-          {children}
-        </ScrollView>
-      );
-    }
-    return <View style={[styles.flexOne, contentStyle]}>{children}</View>;
-  };
+  // On Android, KeyboardAvoidingView with behavior="height" actively resizes
+  // the entire layout while the keyboard animates. This causes a layout thrash
+  // that force-blurs and re-focuses the TextInput in a tight loop, producing
+  // the "keyboard opens and closes instantly" bug.
+  //
+  // Fix: on Android we skip KeyboardAvoidingView entirely and add bottom
+  // padding to the ScrollView so content is never obscured by the keyboard.
+  // The ScrollView's keyboardShouldPersistTaps="handled" keeps the keyboard
+  // alive when the user taps non-input elements.
 
+  const renderScrollable = () => (
+    <ScrollView
+      style={styles.flexOne}
+      contentContainerStyle={[
+        contentStyle,
+        // Give Android enough breathing room at the bottom for the keyboard
+        Platform.OS === "android" && { paddingBottom: 300 },
+      ]}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+      bounces={Platform.OS === "ios"}
+    >
+      {children}
+    </ScrollView>
+  );
+
+  const renderFixed = () => (
+    <View style={[styles.flexOne, contentStyle]}>{children}</View>
+  );
+
+  // iOS: wrap the whole screen in KeyboardAvoidingView with padding behavior
+  // (the safe, battle-tested approach on iOS).
+  if (Platform.OS === "ios") {
+    return (
+      <SafeAreaView style={containerStyle} edges={["top", "left", "right"]}>
+        <StatusBar barStyle={statusBarStyle} backgroundColor={statusBarBg} />
+        <KeyboardAvoidingView
+          behavior="padding"
+          style={styles.flexOne}
+        >
+          {scrollable ? renderScrollable() : renderFixed()}
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  }
+
+  // Android: no KeyboardAvoidingView — just safe area + scroll
   return (
     <SafeAreaView style={containerStyle} edges={["top", "left", "right"]}>
       <StatusBar barStyle={statusBarStyle} backgroundColor={statusBarBg} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.flexOne}
-        keyboardVerticalOffset={keyboardOffset}
-      >
-        {renderContent()}
-      </KeyboardAvoidingView>
+      {scrollable ? renderScrollable() : renderFixed()}
     </SafeAreaView>
   );
 }
@@ -80,9 +102,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   flexOne: {
-    flex: 1,
-  },
-  scrollView: {
     flex: 1,
   },
   contentContainer: {
