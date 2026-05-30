@@ -1,21 +1,21 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Alert, Pressable } from "react-native";
 import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { Alert, Pressable, StyleSheet, View } from "react-native";
 import { theme } from "../../../theme";
 import { Logo } from "../logo/Logo";
 
 // Static UI Elements
-import { Card } from "../../ui/Card";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Button } from "../../ui/Button";
+import { Card } from "../../ui/Card";
+import { Divider } from "../../ui/Divider";
 import { Input } from "../../ui/Input";
 import { Label } from "../../ui/Label";
-import { Divider } from "../../ui/Divider";
 import { Text } from "../../ui/Text";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 
 export function SignInForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("elementary221b@gmail.co");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -70,7 +70,7 @@ export function SignInForm() {
 
       <Card style={styles.card}>
         <Card.Content>
-          
+
           {/* Email Address field */}
           <View style={styles.fieldGroup}>
             <Label>Email Address</Label>
