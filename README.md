@@ -1,6 +1,7 @@
-# Osler AI Telehealth Telemedicine — Mobile Authentication UI 🩺📱
+# Build a React Native Sign In Screen
+## Mobile Development Cohort
 
-A pixel-perfect, premium mobile authentication flow recreated using **React Native**, **Expo (v55.0.0)**, and only **core React Native components**. 
+A pixel-perfect, premium mobile authentication flow recreated using **React Native**, **Expo (v55.0.0)**, and only **core React Native components** for the **Mobile Development Cohort** assignment.
 
 This interface is inspired by the premium Dribbble design for **[Osler AI Telehealth Telemedicine App](https://dribbble.com/shots/24783022-osler-AI-Telehealth-Telemedicine-App-Sign-In-Sign-Up-UI)**.
 
@@ -11,14 +12,18 @@ This interface is inspired by the premium Dribbble design for **[Osler AI Telehe
 We have captured the full interaction, keyboard responsiveness, input validation, and smooth screen transitions on an emulator. You can view the demo video below:
 
 ### Play Demo Video
-If your markdown reader supports HTML5 video, you can play it directly:
 
-<video src="./WhatsApp Video 2026-05-31 at 12.51.05 PM.mp4" controls width="100%" poster="./assets/images/react-logo.png" style="border-radius: 12px; border: 1px solid #E9EBE6;">
+> [!TIP]
+> **How to play this demo video on GitHub:**
+> GitHub's standard markdown renderer requires clean filenames without spaces to correctly resolve and play committed video assets. We have renamed the video file to `demo-walkthrough.mp4` to ensure it resolves perfectly.
+> 
+> * **Option 1 (GitHub Direct Player - Recommended):** Click here to open and watch the video in GitHub's native media viewer: **[📁 Watch Video on GitHub (demo-walkthrough.mp4)](./demo-walkthrough.mp4)**.
+> * **Option 2 (Inline Video Player):** Play the video directly using the player controls below.
+> * **Option 3 (Cloud Hosted Embed):** For a guaranteed inline cloud player, edit this `README.md` directly on the GitHub website, drag-and-drop the `demo-walkthrough.mp4` file from your computer into the markdown text area, and GitHub will instantly generate a cloud-hosted, streaming-ready `<video>` tag for you!
+
+<video src="./demo-walkthrough.mp4" controls width="100%" style="border-radius: 12px; border: 1px solid #E9EBE6; max-height: 500px;">
   Your browser does not support the video tag.
 </video>
-
-Alternatively, you can access the raw video file directly in the root of the workspace:
-* 📁 **[Watch Demo Video (WhatsApp Video 2026-05-31 at 12.51.05 PM.mp4)](./WhatsApp Video 2026-05-31 at 12.51.05 PM.mp4)**
 
 ---
 
@@ -53,7 +58,7 @@ Instead of scattering ad-hoc style configurations across pages, we built robust,
 
 ```
 .
-├── WhatsApp Video 2026-05-31 at 12.51.05 PM.mp4  # Attached Demo Video
+├── demo-walkthrough.mp4                          # Attached Demo Video
 ├── app.json
 ├── package.json
 └── src
