@@ -13,7 +13,9 @@ We have captured the full interaction, keyboard responsiveness, input validation
 
 ### Play Demo Video
 
-https://github.com/user-attachments/assets/b30223f4-eb78-4388-bb4d-70387b5fa711
+<video src="https://github.com/user-attachments/assets/b30223f4-eb78-4388-bb4d-70387b5fa711" controls width="100%" style="border-radius: 12px; border: 1px solid #E9EBE6; max-height: 500px;">
+  Your browser does not support the video tag.
+</video>
 ---
 
 ## 🚀 The Approach & Methodology
