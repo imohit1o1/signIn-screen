@@ -13,7 +13,7 @@ We have captured the full interaction, keyboard responsiveness, input validation
 
 ### Play Demo Video
 
-<video src="https://github.com/user-attachments/assets/b30223f4-eb78-4388-bb4d-70387b5fa711" controls width="100%" style="border-radius: 12px; border: 1px solid #E9EBE6; max-height: 500px;">
+<video src="https://github.com/user-attachments/assets/b30223f4-eb78-4388-bb4d-70387b5fa711" controls="controls" muted="muted" style="width: 100%; max-width: 100%; height: auto; border-radius: 12px; border: 1px solid #E9EBE6;">
   Your browser does not support the video tag.
 </video>
 ---
