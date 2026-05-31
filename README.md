@@ -1,56 +1,119 @@
-# Welcome to your Expo app 👋
+# Osler AI Telehealth Telemedicine — Mobile Authentication UI 🩺📱
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A pixel-perfect, premium mobile authentication flow recreated using **React Native**, **Expo (v55.0.0)**, and only **core React Native components**. 
 
-## Get started
+This interface is inspired by the premium Dribbble design for **[Osler AI Telehealth Telemedicine App](https://dribbble.com/shots/24783022-osler-AI-Telehealth-Telemedicine-App-Sign-In-Sign-Up-UI)**.
 
-1. Install dependencies
+---
 
+## 📺 Demonstration & Video Walkthrough
+
+We have captured the full interaction, keyboard responsiveness, input validation, and smooth screen transitions on an emulator. You can view the demo video below:
+
+### Play Demo Video
+If your markdown reader supports HTML5 video, you can play it directly:
+
+<video src="./WhatsApp Video 2026-05-31 at 12.51.05 PM.mp4" controls width="100%" poster="./assets/images/react-logo.png" style="border-radius: 12px; border: 1px solid #E9EBE6;">
+  Your browser does not support the video tag.
+</video>
+
+Alternatively, you can access the raw video file directly in the root of the workspace:
+* 📁 **[Watch Demo Video (WhatsApp Video 2026-05-31 at 12.51.05 PM.mp4)](./WhatsApp Video 2026-05-31 at 12.51.05 PM.mp4)**
+
+---
+
+## 🚀 The Approach & Methodology
+
+To build a premium UI that feels indistinguishable from a custom production-ready mobile app without importing external UI kits (like NativeBase, Paper, or UI Kitten), the development process was structured into **four distinct phases**:
+
+### 1. Design Tokenization (Theme Design)
+We established a strict design system under `src/theme` before writing any layout code. This guarantees high cohesion across margins, border radiuses, font weights, and color scales:
+* **Color Palette (`src/theme/colors.ts`):** Defined a signature telehealth color system—featuring a vibrant brand primary green (`#80C31C`), premium soft warm background off-white (`#F4F6F2`), clean text colors, and exact social brand color HEX definitions (Google, Facebook, Instagram).
+* **Typography (`src/theme/typography.ts`):** Set proportional font scale dimensions and system font-weight mappings (`regular`, `medium`, `bold`) to preserve consistent legibility.
+* **Layout Spacing & Corners (`src/theme/radius.ts`, `src/theme/spacing.ts`):** Standardized spacing multipliers (`xs`, `sm`, `md`, `lg`, `xl`, `xxl`) and rounded card borders to align with the soft, modern aesthetics.
+
+### 2. Crafting Primitive Reusable UI Components
+Instead of scattering ad-hoc style configurations across pages, we built robust, flexible, primitive wrappers in `src/components/ui/`:
+* **`Screen`:** Handles safe areas (`SafeAreaView`), custom `StatusBar` configuration, standardizes keyboard-avoidance logic (`KeyboardAvoidingView`), and wraps screen layers in a configurable `ScrollView` optimized for varying screen heights.
+* **`Button`:** A unified touch controller implementing custom active-opacity styling, loading spinner states, outline/link variants, and a round `iconOnly` prop specifically tuned for social sign-in buttons.
+* **`Input`:** Handles validation-bound focus ring color adjustments (`borderActive`), secure password visibility toggling, error boundaries, and prefix icons.
+* **`Text`, `Card`, `Label`, `Divider`:** Atomic primitives enforcing standard margins, elevations, and semantic hierarchies.
+
+### 3. Assembling Layout Structures with Pure Core Components
+* Spacing, alignment, and grid systems are designed using `Flexbox` within React Native's `StyleSheet`.
+* Absolute layout sizing was avoided to prevent cutoffs; we used clean percentage bounds, auto-alignments (`alignSelf: 'center'`), and responsive container maximum widths (`maxWidth: 400`) to guarantee compatibility across diverse iOS and Android screens.
+
+### 4. Interactive States, Transitions & Form Validation
+* Implemented form validation logic (verifying valid email syntax, minimum password boundaries) with real-time field error banners.
+* Embedded smooth transitions between authentication screens (Sign In, Sign Up, and Forgot Password options) powered by Expo Router's file-based navigation structure.
+
+---
+
+## 📂 Project Architecture
+
+```
+.
+├── WhatsApp Video 2026-05-31 at 12.51.05 PM.mp4  # Attached Demo Video
+├── app.json
+├── package.json
+└── src
+    ├── app
+    │   ├── (auth)
+    │   │   ├── forgot-password.tsx  # Forgot password viewport route
+    │   │   ├── login.tsx            # Sign In viewport route
+    │   │   └── signup.tsx           # Sign Up viewport route
+    │   ├── _layout.tsx              # Expo Navigation Stack layout configuration
+    │   └── index.tsx                # App entrypoint router
+    ├── components
+    │   ├── auth
+    │   │   ├── forgotpassword
+    │   │   │   └── ForgotPasswordOptions.tsx  # Custom options selection layout
+    │   │   ├── logo
+    │   │   │   └── Logo.tsx                   # Elegant Telecare Vector/SVG logo
+    │   │   ├── signin
+    │   │   │   └── SignInForm.tsx             # Interactive Sign-in layout and actions
+    │   │   └── signup
+    │   │       └── SignUpForm.tsx             # Responsive Sign-up fields
+    │   └── ui
+    │       ├── Button.tsx           # Configurable Button element
+    │       ├── Card.tsx             # Soft elevation card block
+    │       ├── Divider.tsx          # OR-separator with clean text alignment
+    │       ├── Input.tsx            # High-fidelity field inputs (active rings, hide/show text)
+    │       ├── Label.tsx            # Inline form typography labels
+    │       ├── Screen.tsx           # Responsive KeyboardAvoidingView + ScrollView container
+    │       └── Text.tsx             # Scaled typography component
+    └── theme
+        ├── colors.ts                # Telehealth color palette config
+        ├── index.ts                 # Aggregated design configurations
+        ├── radius.ts                # Corner radius tokens
+        ├── spacing.ts               # Spacing tokens (sm, md, lg, xl)
+        └── typography.ts            # Font size and weight specifications
+```
+
+---
+
+## 🔧 Installation & Setup
+
+1. **Install Dependencies:**
    ```bash
    npm install
    ```
-
-2. Start the app
-
+   
+2. **Start the Development Server:**
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+3. **Run on Simulators or Physical Devices:**
+   * Press `i` to launch the iOS Simulator.
+   * Press `a` to launch the Android Emulator.
+   * Scan the terminal QR code using the **Expo Go** app on your physical iOS or Android device.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 💎 Design and Quality Highlights
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+* **Perfect Typography Hierarchy:** Clean text styles scale naturally without breaking on smaller viewport screens.
+* **Fully Accessible Input Fields:** Standard placeholder colors, focus borders, and custom field toggles are fully intuitive.
+* **Responsive Card Wrapper:** Wraps input layers gracefully on phone viewports while staying centered and bounded on tablet layouts.
+* **No UI Libraries:** Leveraged pure `StyleSheet.create`, native state hooks (`useState`), and native layout rendering to ensure rapid boot times and clean rendering.
