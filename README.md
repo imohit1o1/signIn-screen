@@ -13,18 +13,7 @@ We have captured the full interaction, keyboard responsiveness, input validation
 
 ### Play Demo Video
 
-> [!TIP]
-> **How to play this demo video on GitHub:**
-> GitHub's standard markdown renderer requires clean filenames without spaces to correctly resolve and play committed video assets. We have renamed the video file to `demo-walkthrough.mp4` to ensure it resolves perfectly.
-> 
-> * **Option 1 (GitHub Direct Player - Recommended):** Click here to open and watch the video in GitHub's native media viewer: **[📁 Watch Video on GitHub (demo-walkthrough.mp4)](./demo-walkthrough.mp4)**.
-> * **Option 2 (Inline Video Player):** Play the video directly using the player controls below.
-> * **Option 3 (Cloud Hosted Embed):** For a guaranteed inline cloud player, edit this `README.md` directly on the GitHub website, drag-and-drop the `demo-walkthrough.mp4` file from your computer into the markdown text area, and GitHub will instantly generate a cloud-hosted, streaming-ready `<video>` tag for you!
-
-<video src="./demo-walkthrough.mp4" controls width="100%" style="border-radius: 12px; border: 1px solid #E9EBE6; max-height: 500px;">
-  Your browser does not support the video tag.
-</video>
-
+https://github.com/user-attachments/assets/b30223f4-eb78-4388-bb4d-70387b5fa711
 ---
 
 ## 🚀 The Approach & Methodology
